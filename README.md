@@ -18,7 +18,7 @@ If you are not using the ESP32 or if you've already installed ESP32, you can ski
 To install the ESP32 board in your Arduino IDE, follow these next instructions:
 
 1. In your Arduino IDE, go to  File > Preferences
-<br>
+
 ![step1](./assets/images/arduino-installation/step1.PNG)
 
 2. Enter the following into the “Additional Board Manager URLs” field:
