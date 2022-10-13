@@ -85,11 +85,13 @@ First we need to download and install the RF24 library which makes the programmi
 ### Transmitting Device
 
 ![tx](./assets/images/snapshots/transmitter.PNG)
+<br>
 [Get code here](./Transmitter/Transmitter-test2/Transmitter-test2.ino)
 
 ### Receiving Device
 
 ![rx](./assets/images/snapshots/receiving.PNG)
+<br>
 [Get code here](./Receiver/Receiver-test2/Receiver-test2.ino)
 
 ### Output
