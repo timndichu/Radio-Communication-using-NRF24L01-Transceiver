@@ -1,11 +1,13 @@
 
-// Code 1 : Sending Text (Transmitter)
+// Sending Text (Transmitter)
 // Library: TMRh20/RF24 (https://github.com/tmrh20/RF24/)
 
 #include <SPI.h>
 #include <RF24.h>
 #include <nRF24L01.h>
 
+// MY TRANSMITTER IS THE ESP32
+//CONFIGURE THE CE,CSN PARAMETERS DEPENDING ON YOUR BOARD'S PINS
 RF24 radio(4, 5); // CE, CSN
 const byte address[10] = "ADDRESS01";
 
