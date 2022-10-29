@@ -51,7 +51,7 @@ Give it some seconds or minutes to complete downloading all the required resourc
 
 ### ESP32-S Pinout
 
-![esp32](./assets/images/pinout/ESP32pinout.PNG)
+![esp32](./assets/images/pinout/esp32.PNG)
 
 ### NRF24LO1-Transceiver Pinout
 
