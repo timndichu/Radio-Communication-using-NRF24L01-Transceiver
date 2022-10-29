@@ -1,5 +1,5 @@
 /**
- * Sending data from 1 nRF24L01 transceiver to another
+ * Receiving data from a transmitting nRF24L01 transceiver.
  * with Acknowledgement (ACK) payloads attached to ACK packets.
  *
  */
@@ -7,28 +7,23 @@
 #include "printf.h"
 #include "RF24.h"
 
-// MY TRANSMITTER IS THE ESP32
+// MY RECEIVER IS THE NODEMCU 1.0(ESP 12E)
 //CONFIGURE THE CE,CSN PARAMETERS DEPENDING ON YOUR BOARD'S PINS
-RF24 radio(4, 5); // CE, CSN
-
-// It is very helpful to think of an address as a path instead of as
-// an identifying device destination
-// to use different addresses on a pair of radios, we need a variable to
-// uniquely identify which address this radio will use to transmit
+RF24 radio(2, 4); // CE, CSN
 const byte address[10] = "ADDRESS01";
 
-
-bool radioNumber = 0;  // 0 uses address[0] to transmit, 1 uses address[1] to transmit
+// uniquely identify which address this radio will use to transmit
+bool radioNumber = 1;  // 0 uses address[0] to transmit, 1 uses address[1] to transmit
 
 // Used to control whether this node is sending or receiving
-bool role = true;  // true = TX role, false = RX role
+bool role = false;  // true = TX role, false = RX role
 
 // For this example, we'll be using a payload containing
 // a string & an integer number that will be incremented
 // on every successful transmission.
 // Make a data structure to store the entire payload of different datatypes
 struct PayloadStruct {
-  char message[7];  // only using 6 characters for TX & ACK payloads
+  char message[32];  // only using 6 characters for TX & ACK payloads
   uint8_t counter;
 };
 PayloadStruct payload;
@@ -47,10 +42,11 @@ void setup() {
   }
 
   // print example's introductory prompt
-  Serial.println(F("Transmitter AcknowledgementPayloads"));
+  Serial.println(F("Receiver AcknowledgementPayloads"));
 
-
-  radioNumber = 0;
+ 
+  char input = Serial.parseInt();
+  radioNumber = 1;
   Serial.print(F("radioNumber = "));
   Serial.println((int)radioNumber);
 
@@ -140,7 +136,30 @@ void loop() {
     // to make this example readable in the serial monitor
     delay(1000);  // slow transmissions down by 1 second
 
-  } 
+  } else {
+    // This device is a RX node
 
+    uint8_t pipe;
+    if (radio.available(&pipe)) {                     // is there a payload? get the pipe number that recieved it
+      uint8_t bytes = radio.getDynamicPayloadSize();  // get the size of the payload
+      PayloadStruct received;
+      radio.read(&received, sizeof(received));  // get incoming payload
+      Serial.print(F("Received "));
+      Serial.print(bytes);  // print the size of the payload
+      Serial.print(F(" bytes on pipe "));
+      Serial.print(pipe);  // print the pipe number
+      Serial.print(F(": "));
+      Serial.print(received.message);  // print incoming message
+      Serial.print(received.counter);  // print incoming counter
+      Serial.print(F(" Sent: "));
+      Serial.print(payload.message);    // print outgoing message
+      Serial.println(payload.counter);  // print outgoing counter
 
-}  // loop
+      // save incoming counter & increment for next outgoing
+      payload.counter = received.counter + 1;
+      // load the payload for the first received transmission on pipe 0
+      radio.writeAckPayload(1, &payload, sizeof(payload));
+    }
+  }  // role
+
+  }  // loop

@@ -23,7 +23,7 @@ bool role = false;  // true = TX role, false = RX role
 // on every successful transmission.
 // Make a data structure to store the entire payload of different datatypes
 struct PayloadStruct {
-  char message[7];  // only using 6 characters for TX & ACK payloads
+  char message[32];  // only using 6 characters for TX & ACK payloads
   uint8_t counter;
 };
 PayloadStruct payload;
