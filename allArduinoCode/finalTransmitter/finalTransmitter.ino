@@ -364,7 +364,7 @@ void setup() {
 
 void loop() {
 
-  //  print_data();//print some data
+    print_data();//print some data
 
 
   delay(2000);

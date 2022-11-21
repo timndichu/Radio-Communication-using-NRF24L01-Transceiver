@@ -12,6 +12,7 @@
 const int red =  16; // d0
 const int green = 5; // d1
 const int blue = 0; // d3
+const int led = 15; //d8
 // MY RECEIVER IS THE NODEMCU 1.0(ESP 12E)
 //CONFIGURE THE CE,CSN PARAMETERS DEPENDING ON YOUR BOARD'S PINS
 RF24 radio(2, 4); // CE, CSN
@@ -70,6 +71,7 @@ void setup() {
   pinMode(red,   OUTPUT);
   pinMode(green, OUTPUT);
   pinMode(blue,  OUTPUT);
+    pinMode(led,  OUTPUT);
   // initialize the transceiver on the SPI bus
   if (!radio.begin()) {
     //    Serial.println(F("radio hardware is not responding!!"));
@@ -135,6 +137,11 @@ void setup() {
     delay(100); // wait for a second
     digitalWrite(red, LOW); // turn the LED off by making the voltage LOW
     delay(50); // wait for a second
+     digitalWrite(led, HIGH); // turn the LED on
+    Serial.print("red on");
+    delay(100); // wait for a second
+    digitalWrite(led, LOW); // turn the LED off by making the voltage LOW
+    delay(50); // wait for a second
 
   }
 
@@ -145,6 +152,13 @@ void setup() {
     delay(100); // wait for a second
     digitalWrite(red, LOW); // turn the LED off by making the voltage LOW
     delay(50); //
+
+     digitalWrite(led, HIGH); // turn the LED on
+    Serial.print("red on");
+    delay(100); // wait for a second
+    digitalWrite(led, LOW); // turn the LED off by making the voltage LOW
+    delay(50); // wait for a second
+
 
     //    Serial.print ( "No wifi... Trying again" );
   }
@@ -170,6 +184,16 @@ void setup() {
 }
 
 void loop() {
+
+   if ( WiFi.status() != WL_CONNECTED ) {
+       digitalWrite(led, HIGH); // turn the LED on
+    Serial.print("red on");
+     //    Serial.print ( "No wifi... Trying again" );
+  }
+  else {
+     digitalWrite(led, LOW); 
+  }
+
 
   if (role) {
     // This device is a TX node
