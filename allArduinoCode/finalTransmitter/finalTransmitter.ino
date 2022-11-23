@@ -33,7 +33,7 @@ const byte address[10] = "ADDRESS01";
 
 
 int delimiter, delimiter_1;
-String oc, ot, ol, ob, os;
+String oc, ot, ol, ob, os, soc, v1, i1, p1, v2, i2, p2 ;
 
 
 MPU9255 mpu;
@@ -65,9 +65,9 @@ void saveSerialData(void *parameter) {
     if (Serial.available() > 0) {
 
       String stringReceived = Serial.readString();
-    // String stringReceived = "OC,-0.100,-0.300,\nOT,12.1,13.7,12.3,\nOL,0.90,0.90,\nOB,A\nOS,C";
-//          Serial.println(stringReceived);
-     
+      // String stringReceived = "OC,-0.100,-0.300,\nOT,12.1,13.7,12.3,\nOL,0.90,0.90,\nOB,A\nOS,C";
+      //          Serial.println(stringReceived);
+
       int delimiter, delimiter_1, delimiter_2, delimiter_3;
       delimiter = stringReceived.indexOf("\n");
       delimiter_1 = stringReceived.indexOf("\n", delimiter + 1);
@@ -79,10 +79,8 @@ void saveSerialData(void *parameter) {
       ob = stringReceived.substring(delimiter_2 + 1, delimiter_3);
       os = stringReceived.substring(delimiter_3 + 1, stringReceived.length() + 1);
 
- 
-     
 
-    
+
       for (int i = 0; i < 5; i++) {
         if (i == 0) {
           sprintData(oc);
@@ -105,10 +103,7 @@ void saveSerialData(void *parameter) {
           //        continue;
         }
       }
-      
-      
 
-     
     }
     delay(1000);
   }
@@ -120,27 +115,56 @@ void saveEPSData(void *parameter) {
     if (Serial2.available() > 0) {
       String stringReceived = Serial2.readString();
       Serial.println(stringReceived);
+      //      String rec = "SoC,99.0,99.0,99.0,99.0,\nV1,3.19,3.17,3.15,3.17,\nI1,8.10,8.23,8.23,8.31,\nP1,25.65,25.95,25.97,26.64,\nV2,2.93,2.96,2.97,2.95,\nI2,2.97,2.94,2.83,2.82,\nP2,9.70,9.41,9.42,9.65,";
 
-      //      int delimiter, delimiter_1;
-      //      delimiter = stringReceived.indexOf("\n");
-      //      delimiter_1 = stringReceived.indexOf("\n", delimiter + 1);
-      //      oc = stringReceived.substring(0, delimiter);
-      //      ot = stringReceived.substring(delimiter + 1, delimiter_1);
-      //      ol = stringReceived.substring(delimiter_1 + 1, stringReceived.length() + 1);
-      //
-      //      for (int i = 0; i < 3; i++) {
-      //        if (i == 0) {
-      //          sprintData(oc);
-      //        }
-      //        else if (i == 1) {
-      //          sprintData(ot);
-      //        }
-      //        else if (i == 2) {
-      //          sprintData(ol);
-      //        }
-      //      }
-      delay(2000);
+      int delimiter, delimiter_1, delimiter_2, delimiter_3, delimiter_4, delimiter_5;
+      delimiter = stringReceived.indexOf("\n");
+      delimiter_1 = stringReceived.indexOf("\n", delimiter + 1);
+      delimiter_2 = stringReceived.indexOf("\n", delimiter_1 + 1);
+      delimiter_3 = stringReceived.indexOf("\n", delimiter_2 + 1);
+      delimiter_4 = stringReceived.indexOf("\n", delimiter_3 + 1);
+      delimiter_5 = stringReceived.indexOf("\n", delimiter_4 + 1);
+      soc = stringReceived.substring(0, delimiter);
+      v1 = stringReceived.substring(delimiter + 1, delimiter_1);
+      i1 = stringReceived.substring(delimiter_1 + 1, delimiter_2);
+      p1 = stringReceived.substring(delimiter_2 + 1, delimiter_3);
+      v2 = stringReceived.substring(delimiter_3 + 1, delimiter_4);
+      i2 = stringReceived.substring(delimiter_4 + 1, delimiter_5);
+      p2 = stringReceived.substring(delimiter_5 + 1, stringReceived.length() + 1);
+
+      for (int i = 0; i < 7; i++) {
+        if (i == 0) {
+          sprintDataEPS(soc);
+          //        continue;
+        }
+        else if (i == 1) {
+          sprintDataEPS(v1);
+          //        continue;
+        }
+        else if (i == 2) {
+          sprintDataEPS(i1);
+          //        continue;
+        }
+        else if (i == 3) {
+          sprintDataEPS(p1);
+          //        continue;
+        }
+        else if (i == 4) {
+          sprintDataEPS(v2);
+          //        continue;
+        }
+        else if (i == 5) {
+          sprintDataEPS(i2);
+          //        continue;
+        }
+        else if (i == 6) {
+          sprintDataEPS(p2);
+          //        continue;
+        }
+      }
+
     }
+    delay(1000);
   }
 }
 
@@ -163,7 +187,7 @@ void sendPayload() {
       Serial.print(payload.message);  // print the outgoing message
       Serial.print(payload.counter);  // print the outgoing counter
       digitalWrite(green, HIGH); // turn the LED on
-      
+
       delay(500); // wait for a second
       digitalWrite(green, LOW); // turn the LED off by making the voltage LOW
       delay(50);
@@ -183,8 +207,8 @@ void sendPayload() {
         payload.counter = received.counter + 1;
 
         digitalWrite(blue, HIGH); // turn the LED on
-       ;
-        delay(500); // wait for a second 
+        ;
+        delay(500); // wait for a second
         digitalWrite(blue, LOW); // turn the LED off by making the voltage LOW
         delay(50); // wait for a second
 
@@ -196,14 +220,14 @@ void sendPayload() {
     } else {
       Serial.println(F("Transmission failed or timed out"));  // payload was not delivered
       digitalWrite(red, HIGH); // turn the LED on
-     
+
       delay(500); // wait for a second
       digitalWrite(red, LOW); // turn the LED off by making the voltage LOW
       delay(50); // wait for a second
 
     }
 
-    delay(500);
+    delay(1000);
   }
 }
 
@@ -213,6 +237,15 @@ void sprintData(String str) {
   sprintf(txt2, "%s", str.c_str());
   memcpy(payload.message, txt2, sizeof(txt2));
   Serial.print("OBC Successfully transmitted: ");
+  Serial.println(txt2);
+  sendPayload();
+}
+
+void sprintDataEPS(String str) {
+  char txt2[32];
+  sprintf(txt2, "%s", str.c_str());
+  memcpy(payload.message, txt2, sizeof(txt2));
+  Serial.print("EPS Successfully transmitted: ");
   Serial.println(txt2);
   sendPayload();
 }
@@ -292,7 +325,7 @@ void setup() {
 
 
   radioNumber = 0;
- 
+
 
   // role variable is hardcoded to RX behavior, inform the user of this
   //  Serial.println(F("*** PRESS 'T' to begin transmitting to the other node"));
@@ -343,15 +376,15 @@ void setup() {
   );
 
 
-  //  xTaskCreatePinnedToCore(
-  //    saveEPSData,    // Function to be called
-  //    "saveEPSData", // Name of the task
-  //    6000,         // Stack size (bytes in ESP32, words in FreeRTOS)
-  //    NULL,         // Parameter to pass to function
-  //    1,            // Task Priority, the higher the number, the higher the priority (0 to 25)
-  //    NULL,         // Task Handle
-  //    app_cpu       // CPU Core the task should run in
-  //  );
+  xTaskCreatePinnedToCore(
+    saveEPSData,    // Function to be called
+    "saveEPSData", // Name of the task
+    10000,         // Stack size (bytes in ESP32, words in FreeRTOS)
+    NULL,         // Parameter to pass to function
+    1,            // Task Priority, the higher the number, the higher the priority (0 to 25)
+    NULL,         // Task Handle
+    app_cpu       // CPU Core the task should run in
+  );
 
 }
 
@@ -362,6 +395,6 @@ void setup() {
 
 void loop() {
 
-    print_data();//print some data
+//  print_data();//print some data
 
 }
