@@ -163,7 +163,7 @@ void sendPayload() {
       Serial.print(payload.message);  // print the outgoing message
       Serial.print(payload.counter);  // print the outgoing counter
       digitalWrite(green, HIGH); // turn the LED on
-      Serial.print("green on");
+      
       delay(500); // wait for a second
       digitalWrite(green, LOW); // turn the LED off by making the voltage LOW
       delay(50);
@@ -183,8 +183,8 @@ void sendPayload() {
         payload.counter = received.counter + 1;
 
         digitalWrite(blue, HIGH); // turn the LED on
-        Serial.print("blue on");
-        delay(500); // wait for a second
+       ;
+        delay(500); // wait for a second 
         digitalWrite(blue, LOW); // turn the LED off by making the voltage LOW
         delay(50); // wait for a second
 
@@ -196,14 +196,14 @@ void sendPayload() {
     } else {
       Serial.println(F("Transmission failed or timed out"));  // payload was not delivered
       digitalWrite(red, HIGH); // turn the LED on
-      Serial.print("red on");
+     
       delay(500); // wait for a second
       digitalWrite(red, LOW); // turn the LED off by making the voltage LOW
       delay(50); // wait for a second
 
     }
 
-    delay(1000);
+    delay(500);
   }
 }
 
@@ -254,7 +254,7 @@ void print_data()//take some raw readings and print them in serial monitor
     Serial.print("MPU Successfully transmitted: ");
     Serial.println(txt);
     sendPayload();
-    delay(2000);
+    delay(500);
 
   }
 }
@@ -288,13 +288,11 @@ void setup() {
     while (1) {}  // hold in infinite loop
   }
 
-  // print example's introductory prompt
-  Serial.println(F("Transmitter AcknowledgementPayloads"));
+
 
 
   radioNumber = 0;
-  Serial.print(F("radioNumber = "));
-  Serial.println((int)radioNumber);
+ 
 
   // role variable is hardcoded to RX behavior, inform the user of this
   //  Serial.println(F("*** PRESS 'T' to begin transmitting to the other node"));
@@ -365,14 +363,5 @@ void setup() {
 void loop() {
 
     print_data();//print some data
-
-
-  delay(2000);
-
-
-
-
-
-
 
 }

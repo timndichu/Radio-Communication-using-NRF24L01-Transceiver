@@ -133,31 +133,31 @@ void setup() {
   for (int i = 0; i < 10 && WiFi.status() != WL_CONNECTED; i++) {
     //    Serial.print(".");
     digitalWrite(red, HIGH); // turn the LED on
-    Serial.print("red on");
-    delay(100); // wait for a second
+
+    delay(300); // wait for a second
     digitalWrite(red, LOW); // turn the LED off by making the voltage LOW
-    delay(50); // wait for a second
+    delay(300); // wait for a second
      digitalWrite(led, HIGH); // turn the LED on
-    Serial.print("red on");
-    delay(100); // wait for a second
+  
+    delay(300); // wait for a second
     digitalWrite(led, LOW); // turn the LED off by making the voltage LOW
-    delay(50); // wait for a second
+    delay(300); // wait for a second
 
   }
 
   // Check if connected to wifi
   while ( WiFi.status() != WL_CONNECTED ) {
     digitalWrite(red, HIGH); // turn the LED on
-    Serial.print("red on");
-    delay(100); // wait for a second
+    
+    delay(300); // wait for a second
     digitalWrite(red, LOW); // turn the LED off by making the voltage LOW
-    delay(50); //
+    delay(300); //
 
      digitalWrite(led, HIGH); // turn the LED on
-    Serial.print("red on");
-    delay(100); // wait for a second
+   
+    delay(300); // wait for a second
     digitalWrite(led, LOW); // turn the LED off by making the voltage LOW
-    delay(50); // wait for a second
+    delay(300); // wait for a second
 
 
     //    Serial.print ( "No wifi... Trying again" );
@@ -187,7 +187,7 @@ void loop() {
 
    if ( WiFi.status() != WL_CONNECTED ) {
        digitalWrite(led, HIGH); // turn the LED on
-    Serial.print("red on");
+  
      //    Serial.print ( "No wifi... Trying again" );
   }
   else {
@@ -202,7 +202,7 @@ void loop() {
     bool report = radio.write(&payload, sizeof(payload));  // transmit & save the report
     unsigned long end_timer = micros();                    // end the timer
     digitalWrite(blue, HIGH); // turn the LED on
-    Serial.print("blue on");
+    
     delay(500); // wait for a second
     digitalWrite(blue, LOW); // turn the LED off by making the voltage LOW
     if (report) {
@@ -248,10 +248,10 @@ void loop() {
       PayloadStruct received;
       radio.read(&received, sizeof(received));  // get incoming payload
       digitalWrite(green, HIGH); // turn the LED on
-      Serial.print("green on");
+     
       delay(500); // wait for a second
       digitalWrite(green, LOW); // turn the LED off by making the voltage LOW
-
+      delay(50);
       // let the websockets client check for incoming messages
       if (client.available()) {
         client.poll();
@@ -289,8 +289,6 @@ void loop() {
       }
 
 
-
-      delay(500);
       //      Serial.print(F("Received "));
       //      Serial.print(bytes);  // print the size of the payload
       //      Serial.print(F(" bytes on pipe "));
